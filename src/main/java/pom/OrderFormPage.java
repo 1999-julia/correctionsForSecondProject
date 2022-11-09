@@ -6,43 +6,32 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.concurrent.TimeUnit;
 public class OrderFormPage {
-    private WebDriver driver;
+    private final WebDriver driver;
 
-    private By nameField = By.xpath("//input[@placeholder='* Имя']");
+    private final By nameField = By.xpath("//input[@placeholder='* Имя']");
 
-    private By surnameField = By.xpath("//input[@placeholder='* Фамилия']");
+    private final By surnameField = By.xpath("//input[@placeholder='* Фамилия']");
 
-    private By adressField = By.xpath("//input[@placeholder='* Адрес: куда привезти заказ']");
+    private final By adressField = By.xpath("//input[@placeholder='* Адрес: куда привезти заказ']");
 
-    private By metroStationField = By.xpath("//input[@placeholder='* Станция метро']");
+    private final By metroStationField = By.xpath("//input[@placeholder='* Станция метро']");
 
-    private By phoneNumberField = By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']");
+    private final By phoneNumberField = By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']");
 
-    private By buttonNext = By.xpath("//button[contains(@class, 'Button_Button__ra12g Button_Middle__1CSJM')]"); //кнопка Далее
+    private final By buttonNext = By.xpath("//button[contains(text(), 'Далее')]"); //кнопка Далее
 
-    private By whenField = By.xpath("//input[@placeholder='* Когда привезти самокат']");
+    private final By whenField = By.xpath("//input[@placeholder='* Когда привезти самокат']");
 
-    private By periodField = By.xpath("//div[@class='Dropdown-root']"); //для клика по полю периода проката
+    // Выпадающий список "* Срок аренды"
+    private final By dropDownListRentalPeriod = By.xpath(".//div[@class='Dropdown-root']");
 
-    private By period1Field = By.xpath("//div[text()='сутки']");
-    private By period2Field = By.xpath("//div[text()='двое суток']");
-    private By period3Field = By.xpath("//div[text()='трое суток']");
-    private By period4Field = By.xpath("//div[text()='четверо суток']");
-    private By period5Field = By.xpath("//div[text()='пятеро суток']");
-    private By period6Field = By.xpath("//div[text()='шестеро суток']");
-    private By period7Field = By.xpath("//div[text()='семеро суток']");
+    private final By commentField = By.xpath("//input[@placeholder='Комментарий для курьера']"); //ввод комментария
 
-    private By colorFieldBlack = By.id("black"); //чек-бокс выбор цвета черный
+    private final By finalButtonOrder = By.xpath("//div[contains(@class, 'Order_Buttons')]//button[contains(text(), 'Заказать')]"); //кнопка Заказать
 
-    private By colorFieldGrey = By.id("grey"); //чек-бокс выбор цвета серый
+    private final By yesButtonOrder = By.xpath("//div[contains(@class, 'Order_Buttons')]/button[contains(text(), 'Да')]"); //кнопка Да
 
-    private By commentField = By.xpath("//input[@placeholder='Комментарий для курьера']"); //ввод комментария
-
-    private By finalButtonOrder = By.xpath("//div[@class='Order_Buttons__1xGrp']//button[contains(text(), 'Заказать')]"); //кнопка Заказать
-
-    private By yesButtonOrder = By.xpath("//div[@class='Order_Buttons__1xGrp']/button[contains(text(), 'Да')]"); //кнопка Да
-
-    private By checkButtonStatusOrder = By.xpath("//button[contains(text(), 'Посмотреть статус')]"); //кнопка Посмотреть статус
+    private final By checkButtonStatusOrder = By.xpath("//button[contains(text(), 'Посмотреть статус')]"); //кнопка Посмотреть статус
 
     public OrderFormPage(WebDriver driver) {
         this.driver = driver;
@@ -62,7 +51,7 @@ public class OrderFormPage {
 
     public void sendMetroStationField(String metroStation) {
         driver.findElement(metroStationField).sendKeys(metroStation, Keys.ARROW_DOWN, Keys.ENTER);
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     public void sendPhoneNumberField(String phoneNumber) {
@@ -78,33 +67,13 @@ public class OrderFormPage {
     }
 
     public void sendPeriod(String period) { //метод для выбора периода проката
-        driver.findElement(periodField).click();
-        if (period == "сутки") {
-            driver.findElement(period1Field).click();
-        } else if (period == "двое суток") {
-            driver.findElement(period2Field).click();
-        } else if (period == "трое суток") {
-            driver.findElement(period3Field).click();
-        } else if (period == "четверо суток") {
-            driver.findElement(period4Field).click();
-        } else if (period == "пятеро суток") {
-            driver.findElement(period5Field).click();
-        } else if (period == "шестеро суток") {
-            driver.findElement(period6Field).click();
-        } else if (period == "семеро суток") {
-            driver.findElement(period7Field).click();
-        } else {
-            System.out.println("Такого срока не существует!");
-        }
+        driver.findElement(dropDownListRentalPeriod).click();
+        driver.findElement(By.xpath(".//div[@class='Dropdown-option' and contains(text(), '" + period + "')]")).click();
     }
-    public void clickColorField(String color) { //метод для выбора цвета самоката
-        if (color == "Чёрный") {
-            driver.findElement(colorFieldBlack).click();
-        } else if (color == "Серый") {
-            driver.findElement(colorFieldGrey).click();
-        } else {
-            System.out.println("Такого цвета не существует!");
-        }
+
+    //метод для выбора цвета самоката
+    public void clickColorField(String color) {
+        driver.findElement(By.id(color)).click();
     }
 
     public void sendCommentField(String comment) {
@@ -123,3 +92,4 @@ public class OrderFormPage {
         driver.findElement(checkButtonStatusOrder).click();
     }
 }
+
